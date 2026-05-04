@@ -1,36 +1,18 @@
-const useProxy = true;
-const proxy = "https://cors-anywhere.herokuapp.com";
+export default async function handler(req, res) {
+  const { lat, lng } = req.query;
 
-function getLocation(){
-  const cache = JSON.parse(localStorage.getItem('cachedLocation') || '{}');
-  const now =Date.now();
-
-  if (cache.timestamp && now - cache.timestamp < 10 * 60 * 1000){
-    useLocation(cache.lat, cache.lng);
+  if (!lat || !lng) {
+      return res.status(400).json({ error: 'Missing lat/lng parameters' });
   }
-  else {
-    navigator.geolocation.getCurrentPosition(pos => {
-    const lat = pos.coords.latitude;
-    const lng = pos.coords.longitude;
-    localStorage.setItem('cachedLocation', JSON.stringify({ lat, lng, timestamp: now }));
-    useLocation(lat, lng);
-    }, () => alert("Location access denied or unavailable."));
-  }
-}
 
-async function useLocation(lat, lng) {
-  const endpoint = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=1500&type=cafe&key=${API_KEY}`;
-  const url = useProxy ? proxy + endpoint : endpoint;
+  const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=1500&type=cafe&key=${process.env.API_KEY}`;
+
   try {
-    const response = await fetch(url);
-    const data = await response.json();
-    if (data.results) {
-      displayCards(data.results);
-    } else {
-      alert("No cafes found.");
-    }
+      const response = await fetch(url);
+      const data = await response.json();
+      res.status(200).json(data);
   } catch (e) {
-    console.error("Error fetching Places API:", e);
-    alert("Error fetching cafes.");
+      console.error("Error fetching Places API:", e);
+      res.status(500).json({ error: 'Error fetching cafes' });
   }
 }
