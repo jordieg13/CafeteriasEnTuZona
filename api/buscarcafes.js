@@ -1,4 +1,10 @@
 export default async function handler(req, res) {
+  const origin = req.headers.origin || req.headers.referer || '';
+  const allowed = process.env.ALLOWED_ORIGIN; // ej: "https://tu-app.vercel.app"
+  
+  if (allowed && !origin.includes(allowed)) {
+    return res.status(403).json({ error: 'Forbidden' });
+  }
   const { lat, lng } = req.query;
 
   if (!lat || !lng) {
