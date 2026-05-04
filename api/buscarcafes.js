@@ -19,7 +19,7 @@ function getLocation(){
 }
 
 async function useLocation(lat, lng) {
-  const endpoint = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=1500&type=cafe&key=${apiKey}`;
+  const endpoint = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=1500&type=cafe&key=${API_KEY}`;
   const url = useProxy ? proxy + endpoint : endpoint;
   try {
     const response = await fetch(url);
