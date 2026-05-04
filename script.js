@@ -42,8 +42,8 @@ function displayCards(cafes) {
         card.className = "location-card";
 
         const imgUrl = cafe.photos?.[0]?.photo_reference
-            ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${cafe.photos[0].photo_reference}&key=${window.MAPS_PHOTO_KEY || ''}`
-            : "https://via.placeholder.com/250x150?text=No+Image";
+            ? `/api/foto?ref=${cafe.photos[0].photo_reference}`
+            : "https://placehold.co/400x150?text=Sin+imagen";
 
         const cafeData = {
             name: cafe.name,
